@@ -1,10 +1,6 @@
 const fsPromises = require('fs').promises;
 
-const getDataFromFile = (pathToFile) => {
-  return fsPromises
-    .readFile(pathToFile, { encoding: 'utf-8' })
-    .then((data) => JSON.parse(data))
-    .catch((err) => new Error(`Ошибка: ${err}`));
-};
-
+const getDataFromFile = (pathToFile) => fsPromises
+  .readFile(pathToFile, { encoding: 'utf-8' })
+  .then((data) => JSON.parse(data));
 module.exports = getDataFromFile;
