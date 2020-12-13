@@ -9,11 +9,9 @@ const getCards = (req, res) => Card.find({})
   .then((cards) => res.status(200).send(cards))
   .catch((err) => {
     switch (err.name) {
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -26,11 +24,9 @@ const createCard = (req, res) => Card.create(
       case 'ValidationError':
         return res.status(BAD_REQUEST)
           .send({ message: 'Переданы некорректные данные' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -43,11 +39,9 @@ const deleteCard = (req, res) => Card.findByIdAndRemove(
       case 'CastError':
         return res.status(NOT_FOUND)
           .send({ message: 'Карточка не найдена' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -62,11 +56,9 @@ const likeCard = (req, res) => Card.findByIdAndUpdate(
       case 'CastError':
         return res.status(NOT_FOUND)
           .send({ message: 'Карточка не найдена' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -81,11 +73,9 @@ const dislikeCard = (req, res) => Card.findByIdAndUpdate(
       case 'CastError':
         return res.status(NOT_FOUND)
           .send({ message: 'Карточка не найдена' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 

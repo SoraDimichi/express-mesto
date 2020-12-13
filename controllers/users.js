@@ -9,11 +9,9 @@ const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
   .catch((err) => {
     switch (err.name) {
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -24,11 +22,9 @@ const getProfile = (req, res) => User.findOne({ _id: req.params.id })
       case 'CastError':
         return res.status(NOT_FOUND)
           .send({ message: 'Пользователь не найден' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -39,11 +35,9 @@ const createUser = (req, res) => User.create(req.body)
       case 'ValidationError':
         return res.status(BAD_REQUEST)
           .send({ message: 'Переданы некорректные данные' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -61,11 +55,9 @@ const updateProfile = (req, res) => User.findByIdAndUpdate(
       case 'ValidationError':
         return res.status(BAD_REQUEST)
           .send({ message: 'Переданы некорректные данные' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
@@ -83,11 +75,9 @@ const updateAvatar = (req, res) => User.findByIdAndUpdate(
       case 'ValidationError':
         return res.status(BAD_REQUEST)
           .send({ message: 'Переданы некорректные данные' });
-      case 'MongoError':
+      default:
         return res.status(INTERNAL_SERVER_ERROR)
           .send({ message: 'На сервере произошла ошибка' });
-      default:
-        return res.send(err);
     }
   });
 
