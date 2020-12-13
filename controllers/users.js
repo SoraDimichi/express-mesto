@@ -1,9 +1,8 @@
 const User = require('../models/user');
-const {
-  NOT_FOUND,
-  BAD_REQUEST,
-  INTERNAL_SERVER_ERROR,
-} = require('../utils/errors');
+
+const NOT_FOUND = 404;
+const BAD_REQUEST = 400;
+const INTERNAL_SERVER_ERROR = 500;
 
 const getUsers = (req, res) => User.find({})
   .then((users) => res.status(200).send(users))
@@ -16,7 +15,12 @@ const getUsers = (req, res) => User.find({})
   });
 
 const getProfile = (req, res) => User.findOne({ _id: req.params.id })
-  .then((user) => res.status(200).send(user))
+  .then((user) => {
+    if (!user) {
+      return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+    }
+    return res.status(200).send(user);
+  })
   .catch((err) => {
     switch (err.name) {
       case 'CastError':
@@ -46,7 +50,12 @@ const updateProfile = (req, res) => User.findByIdAndUpdate(
   { name: req.body.name, about: req.body.about },
   { new: true, runValidators: true },
 )
-  .then((user) => res.status(200).send(user))
+  .then((user) => {
+    if (!user) {
+      return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+    }
+    return res.status(200).send(user);
+  })
   .catch((err) => {
     switch (err.name) {
       case 'CastError':
@@ -66,7 +75,12 @@ const updateAvatar = (req, res) => User.findByIdAndUpdate(
   { avatar: req.body.avatar },
   { new: true, runValidators: true },
 )
-  .then((user) => res.status(200).send(user))
+  .then((user) => {
+    if (!user) {
+      return res.status(NOT_FOUND).send({ message: 'Пользователь не найден' });
+    }
+    return res.status(200).send(user);
+  })
   .catch((err) => {
     switch (err.name) {
       case 'CastError':
