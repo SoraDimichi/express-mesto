@@ -8,6 +8,20 @@
   
 Остальные директории вспомогательные, создаются при необходимости разработчиком
 
+## Либы использованные в проекте
+
+* express
+* mongoose
+* body-parser
+* bcrypt
+* validator
+* jsonwebtoken
+* cors
+* celebrate
+* winston
+* express-winston
+* dotenv
+
 ## Запуск проекта
 
 `npm run start` — запускает сервер   
