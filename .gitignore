@@ -14,3 +14,4 @@ node_modules
 .idea
 .vscode
 ../react-mesto-api-full/backend/.env
+.env

@@ -7,38 +7,60 @@ const validAuth = celebrate({
       .email()
       .min(5)
       .max(30),
-    password: Joi
-      .string()
+    password: Joi.string()
       .required()
+      .regex(RegExp(/^\S*$/))
       .min(4),
-  }),
-});
-
-const validUpdateProfile = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(50),
   }).unknown(true),
 });
 
-const validUpdateAvatar = celebrate({
+const validProfile = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().min(2)
+    name: Joi.string()
+      .min(2)
+      .max(30),
+    about: Joi.string()
+      .min(2)
+      .max(50),
+  }).unknown(true),
+});
+
+const validAvatar = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string()
+      .regex(RegExp(/^https?:\/\/(www\.)?[a-z0-9._~:/?#[\]@!$&'()*+,;=-]+#?$/i))
+      .min(2)
+      .max(200),
+  }).unknown(true),
+});
+
+const validCard = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string()
+      .required()
+      .min(2)
+      .max(30),
+    link: Joi.string()
+      .regex(RegExp(/^https?:\/\/(www\.)?[a-z0-9._~:/?#[\]@!$&'()*+,;=-]+#?$/i))
+      .min(2)
+      .required()
       .max(200),
   }),
 });
 
-const validCreateCard = celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().min(2)
-      .max(200),
-  }).unknown(true),
+const validId = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string()
+      .required()
+      .length(24)
+      .hex(),
+  }),
 });
 
 module.exports = {
   validAuth,
-  validUpdateProfile,
-  validUpdateAvatar,
-  validCreateCard,
+  validProfile,
+  validAvatar,
+  validCard,
+  validId,
 };

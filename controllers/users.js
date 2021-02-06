@@ -8,7 +8,6 @@ const {
   UnauthorizedError,
   BadRequestError,
   NotFoundError,
-  ConflictError,
 } = require('../middlewares/errorHandler');
 
 const login = (req, res, next) => {
@@ -21,21 +20,23 @@ const login = (req, res, next) => {
   return User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new ConflictError('Неправильный логин');
+        throw new UnauthorizedError('Неправильный логин');
       }
       return bcrypt.compare(password, user.password).then((isValidate) => {
         if (isValidate) {
           const token = getJWTToken({ id: user._id });
           return res.send({ token });
         }
-        throw new ConflictError('Неправильный пароль');
+        throw new UnauthorizedError('Неправильный пароль');
       });
     })
     .catch(next);
 };
 
 const createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const {
+    email, password, name, about, avatar,
+  } = req.body;
 
   if (!email || !password) {
     throw new BadRequestError('Переданы некорректные данные');
@@ -44,11 +45,13 @@ const createUser = (req, res, next) => {
   return User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new ConflictError('Такой пользователь уже существует');
+        throw new UnauthorizedError('Такой пользователь уже существует');
       }
       return bcrypt.hash(password, Number(SALT_ROUNDS));
     })
-    .then((cryptedPassword) => User.create({ email, password: cryptedPassword }))
+    .then((cryptedPassword) => User.create({
+      email, password: cryptedPassword, name, about, avatar,
+    }))
     // eslint-disable-next-line no-shadow
     .then(({ _id, email }) => res.send({ _id, email }))
     .catch(next);
@@ -59,6 +62,15 @@ const getUsers = (req, res, next) => User.find({})
   .catch(next);
 
 const getMyProfile = (req, res, next) => User.findById(req.user.id)
+  .then((user) => {
+    if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    return res.status(200).send(user);
+  })
+  .catch(next);
+
+const getUser = (req, res, next) => User.findById(req.params.id)
   .then((user) => {
     if (!user) {
       throw new NotFoundError('Пользователь не найден');
@@ -100,4 +112,5 @@ module.exports = {
   updateProfile,
   updateAvatar,
   getMyProfile,
+  getUser,
 };
