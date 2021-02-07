@@ -39,7 +39,7 @@ const createUser = (req, res, next) => {
   } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError('Переданы некорректные данные');
+    throw new UnauthorizedError('Переданы некорректные данные');
   }
 
   return User.findOne({ email })
